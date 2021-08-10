@@ -1,14 +1,20 @@
 //Dependencies
-const JSONStore = require('json-store-stats');
-let db = JSONStore('../../db/db.json');
 const fs = require('fs');
 // ROUTING
 
 module.exports = (app) => {
   // API GET Requests
   app.get('/api/notes', (req, res) => {
-    let noteData = JSON.parse(db.getAll());
-    res.json(noteData);
+    fs.readFile('../../db/db.json', 'utf8', (err, data) => {
+      if (err) {
+        throw err;
+      };
+      let notes = JSON.parse(data);
+      notes.forEach((note, id) => {
+        note.id = id++;
+      });
+      return res.send(notes);
+    });
   });
   // API POST Requests
   // Below code handles when a user submits a form and thus submits data to the server.
@@ -19,8 +25,33 @@ module.exports = (app) => {
   // ---------------------------------------------------------------------------
 
   app.post('/api/notes', (req, res) => {
-    let newNote = req.body;
+    fs.readFile('../../db/db.json', 'utf8', (err, data) => {
+      if(err) {
+        throw err;
+      };
+      let database;
+       if (data != undefined) { 
+         database = JSON.parse(data)
+        } else {
+          database = [];
+        };
+        let newNote = {
+          id: `${database.length}`,
+          title: `${req.body.title}`,
+          text: `${req.body.text}`
+        };
 
+        database.push(newNote);
+        let db = JSON.stringify(database, null, 1);
+
+        fs.writeFile('../../db/db.json', db, (err, data) => {
+          if(err) {
+            throw err;
+          };
+          console.log('Note added');
+          return res.send(newNote);
+        });
+    });
   });
 
 };
