@@ -9,6 +9,7 @@ module.exports = (app) => {
   });
   // Home route
   app.get('*', (req, res) => {
+    debugger;
     res.sendFile(path.join(__dirname, '../public/index.html'));
   });
 };
