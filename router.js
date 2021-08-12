@@ -49,26 +49,26 @@ router.post("/api/notes", async (req, res) => {
   });
 });
 
-router.delete('/api/notes:id', async (req, res) => {
-  await fs.readFile("./db/db.json", "utf8", async (err, data) => {
-    if (err) {
-      throw err;
-    };
-    let database = JSON.parse(data);
-    let del = req.params.id
+// router.delete('/api/notes:id', async (req, res) => {
+//   await fs.readFile("./db/db.json", "utf8", async (err, data) => {
+//     if (err) {
+//       throw err;
+//     };
+//     let database = JSON.parse(data);
+//     let del = req.params.id
 
-    database.splice(del, 1);
-    let db = JSON.stringify(database, null, 1);
+//     database.splice(del, 1);
+//     let db = JSON.stringify(database, null, 1);
 
-    await fs.writeFile("./db/db.json", db, (err, data) => {
-      if (err) {
-        throw err;
-      }
-      console.log("Note deleted");
-      return res.send("Note deleted");
-    });
-  });
-});
+//     await fs.writeFile("./db/db.json", db, (err, data) => {
+//       if (err) {
+//         throw err;
+//       }
+//       console.log("Note deleted");
+//       return res.send("Note deleted");
+//     });
+//   });
+// });
 
 router.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"));
